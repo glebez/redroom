@@ -1,0 +1,15 @@
+{
+  "name": "redroom",
+  "version": "1.0.0",
+  "description": "Tool to record twin peaks red room style videos.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "recordrtc": "^5.4.1"
+  }
+}
