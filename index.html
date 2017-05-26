@@ -8,9 +8,15 @@
 <body>
   <textarea name="message" id="message" cols="30" rows="10"></textarea>
   <p class="hint-text"></p>
+  <div>
+    <button id="start">Start Record</button>
+    <button id="stop">Stop Record</button>
+  </div>
   <video class="video" src=""></video>
 
-  <script src="/node_modules/recordrtc/RecordRTC.js"> </script>
+  <script src="node_modules/recordrtc/RecordRTC.js"></script>
+  <script src="http://wzrd.in/standalone/uuid@latest"></script>
+  <script src="node_modules/axios/dist/axios.js"></script>
   <script src="app.js" charset="utf-8"></script>
 </body>
 </html>
