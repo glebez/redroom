@@ -1,2 +1,5 @@
 node_modules/
 cloudinaryConfig.js
+public/**.css
+public/bundle.js
+npm-debug.log

@@ -1,4 +1,9 @@
 'use strict';
+import uuid from 'uuid';
+import RecordRTC from 'recordrtc';
+import axios from 'axios';
+
+import '../scss/main.scss';
 
 function main() {
   const textarea = document.querySelector('#message');
@@ -13,6 +18,7 @@ function main() {
   textarea.addEventListener('keyup', handleTextareaChange);
   startBtn.addEventListener('click', handleStartRecord);
   stopBtn.addEventListener('click', handleStopRecord);
+  streamUserMedia();
 
   function handleTextareaChange(e) {
     const value = e.target.value;
@@ -26,9 +32,11 @@ function main() {
   }
 
   function handleStartRecord(e) {
-    recorder = new RecordRTC(mediaStream, { video: true });
-    recorder.startRecording();
-    toggleRecordBtns();
+    streamUserMedia().then(function () {
+      recorder = new RecordRTC(mediaStream, { video: true });
+      recorder.startRecording();
+      toggleRecordBtns();
+    });
   }
 
   function handleStopRecord(e) {
@@ -45,15 +53,21 @@ function main() {
     return navigator.mediaDevices.getUserMedia(constraints);
   }
 
-  captureUserMedia().then(function (stream) {
-    videoEl.srcObject = mediaStream = stream;
-    videoEl.play();
-    videoEl.muted = true;
-    videoEl.controls = false;
-    stopBtn.disabled = true;
-  }).catch(function (err) {
-    console.log(err);
-  });
+  function streamUserMedia() {
+    if (!mediaStream) {
+      return captureUserMedia().then(function (stream) {
+        videoEl.srcObject = mediaStream = stream;
+        videoEl.play();
+        videoEl.muted = true;
+        videoEl.controls = false;
+        stopBtn.disabled = true;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    } else {
+      return Promise.resolve();
+    }
+  }
 
   function postFiles() {
     const blob = recorder.getBlob();
@@ -73,7 +87,10 @@ function main() {
           const fileURL = res.data.fileURL;
 
           console.info('fileURL', fileURL);
-          if(mediaStream) mediaStream.stop();
+          if(mediaStream) {
+            mediaStream.stop();
+            mediaStream = null;
+          }
           videoEl.srcObject = null;
           videoEl.src = fileURL;
           videoEl.play();
@@ -82,23 +99,7 @@ function main() {
       }).catch(function (err) {
         console.error(err);
       });
-
-    // xhr('/uploadFile', file, function(responseText) {
-    //     var fileURL = JSON.parse(responseText).fileURL;
-    //
-    //     console.info('fileURL', fileURL);
-    //     videoElement.src = fileURL;
-    //     videoElement.play();
-    //     videoElement.muted = false;
-    //     videoElement.controls = true;
-    //
-    //     document.querySelector('#footer-h2').innerHTML = '<a href="' + videoElement.src + '">' + videoElement.src + '</a>';
-    // });
-
-
-}
-
-
+  }
 }
 
 document.addEventListener('DOMContentLoaded', main);

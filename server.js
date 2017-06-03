@@ -93,7 +93,7 @@ function uploadFile(request, response) {
     const formidable = require('formidable');
     const util = require('util');
     const cloudinary = require('cloudinary');
-    const cloudinaryConfig = require('./cloudinaryConfig');
+    const cloudinaryConfig = require('./src/cloudinaryConfig');
 
     cloudinary.config(cloudinaryConfig);
     console.log(cloudinaryConfig);
@@ -117,8 +117,6 @@ function uploadFile(request, response) {
               return;
             }
             let url = result.url;
-            // const lastSlash = url.lastIndexOf('/');
-            // url = url.slice(0, lastSlash) + '/e_reverse' + url.slice(lastSlash);
             response.writeHead(200, getHeaders('Content-Type', 'application/json'));
             response.write(JSON.stringify({
                 fileURL: url
@@ -126,12 +124,6 @@ function uploadFile(request, response) {
             response.end();
           }
         );
-
-        // const fileName = file.split('path:')[1].split('\',')[0].split(dir)[1].toString().replace(/\\/g, '').replace(/\//g, '');
-        // const fileURL = 'http://' + app.address + ':' + port + '/uploads/' + fileName;
-        //
-        // console.log('fileURL: ', fileURL);
-
     });
 }
 
